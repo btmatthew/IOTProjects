@@ -1,8 +1,5 @@
 #include <ESP8266WiFi.h>
 
-
-const char* ssid = "TP-LINK_F6C454";
-const char* password = "75576509";
 const int pin = 13;
 
 const int pResistor = 36;
@@ -28,7 +25,7 @@ boolean turnLampOn() {
   readOut += "\"sensorValue\":";
   readOut += value;
   readOut += "}";
-
+server.send(200, "text/plain", readOut);
 }
 
 boolean turnLampOff() {
@@ -43,7 +40,7 @@ boolean turnLampOff() {
   readOut += "\"sensorValue\":";
   readOut += value;
   readOut += "}";
-
+  server.send(200, "text/plain", readOut);
 }
 
 void handleStatus() {

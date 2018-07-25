@@ -18,11 +18,18 @@ void configSetup() {
   readEEPROM(0, 32, wifi_ssid_private);
   readEEPROM(32, 32, wifi_password_private);
 
+  Serial.println(wifi_ssid_private);
+
+  Serial.println(wifi_password_private);
+  
+  
   if (strlen(wifi_ssid_private) == 0) {
+    Serial.println("access normal wifi");
     setupWiFiForSoftAP();
     server.on("/wifiSetUP", handleBody); //Associate the handler function to the path
     server.begin(); //Start the server
   } else {
+    Serial.println("wifi station");
     setupWifiForSTA();
     //todo test all of the functionality
     server.on("/status", handleStatus); //Associate the handler function to the path
@@ -33,12 +40,8 @@ void configSetup() {
 }
 
 void loop() {
-
   server.handleClient(); //Handling of incoming requests
-
 }
-
-
 
 void handleBody() { //Handler for the body path
 
@@ -47,12 +50,12 @@ void handleBody() { //Handler for the body path
     server.send(200, "text/plain", "Body not received");
     return;
 
-  }
-
+    }
+  Serial.println("pass received");
   //String message = "Body received:\n";
   String message = server.arg("plain");
   //message += "\n";
-
+  Serial.println(message);
   server.send(200, "text/plain", "detailsReceived");
   //Defining JSONBuffer
   DynamicJsonBuffer jsonBuffer;
@@ -62,7 +65,8 @@ void handleBody() { //Handler for the body path
   String ssid = root[String("ssid")];
 
   String pass = root[String("pass")];
-
+  Serial.println(ssid);
+  Serial.println(pass);
   strcat(wifi_ssid_private, ssid.c_str());
   strcat(wifi_password_private, pass.c_str());
 
@@ -74,8 +78,9 @@ void handleBody() { //Handler for the body path
   Serial.println(wifi_ssid_private);
 
   Serial.println(wifi_password_private);
-
+  Serial.println("endWIFI");
   endWiFiSetup();
+  
   configSetup();
   
 }
