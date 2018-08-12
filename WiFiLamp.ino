@@ -1,4 +1,4 @@
-#include <ESP8266WiFi.h>
+
 
 const int pin = 13;
 
@@ -10,10 +10,9 @@ int maxValue;
 void setupLamp()
 {
   pinMode(pResistor, INPUT);
-  Serial.begin(115200);
 }
 
-boolean turnLampOn() {
+String turnLampOn() {
   pinMode(pin, OUTPUT);
   digitalWrite(pin, HIGH);
   delay(2000);
@@ -25,10 +24,10 @@ boolean turnLampOn() {
   readOut += "\"sensorValue\":";
   readOut += value;
   readOut += "}";
-server.send(200, "text/plain", readOut);
+  return readOut;
 }
 
-boolean turnLampOff() {
+String turnLampOff() {
   pinMode(pin, OUTPUT);
   digitalWrite(pin, HIGH);
   delay(2000);
@@ -40,16 +39,16 @@ boolean turnLampOff() {
   readOut += "\"sensorValue\":";
   readOut += value;
   readOut += "}";
-  server.send(200, "text/plain", readOut);
+  return readOut;
 }
 
-void handleStatus() {
+String lampStatus() {
   value = normalization(analogRead(pResistor));
   String readOut = "{";
   readOut += "\"sensorValue\":";
   readOut += value;
   readOut += "}";
-  server.send(200, "text/plain", readOut);
+  return readOut;
 }
 
 int normalization(int value) {
