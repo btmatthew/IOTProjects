@@ -11,7 +11,7 @@ const char WiFiAPPSK[] = "password";
 char wifi_ssid_private[32];
 char wifi_password_private[32];
 
-char user_name_private[32];
+char user_email_private[32];
 char user_password_private[32];
 
 char device_id_private[32];
@@ -24,7 +24,7 @@ void setup() {
   readSSID(wifi_ssid_private);
   readSsidPass(wifi_password_private);
   readDeviceID(device_id_private);
-  readUserName(user_name_private);
+  readUserName(user_email_private);
   readUserPassword(user_password_private);
   readDeviceDescription(device_description_private);
   configSetup();
@@ -78,7 +78,7 @@ void configBody() { //Handler for the body path
 
   String pass = root[String("pass")];
 
-  String userName = root[String("userName")];
+  String userEmail = root[String("userEmail")];
 
   String password = root[String("userPassword")];
 
@@ -86,7 +86,7 @@ void configBody() { //Handler for the body path
 
   strcat(wifi_ssid_private, ssid.c_str());
   strcat(wifi_password_private, pass.c_str());
-  strcat(user_name_private, userName.c_str());
+  strcat(user_email_private, userEmail.c_str());
   strcat(user_password_private, password.c_str());
   strcat(device_description_private, description.c_str());
 
@@ -94,7 +94,7 @@ void configBody() { //Handler for the body path
 
   writeSsidPass(wifi_password_private);
 
-  writeUserName(user_name_private);
+  writeUserName(user_email_private);
 
   writeUserPassword(user_password_private);
 

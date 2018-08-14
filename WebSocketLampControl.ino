@@ -28,11 +28,12 @@ void webSocketLoop() {
   webSocket.loop();
 }
 
-void registerDeviceWithSystem(String userName, String password, String deviceDescription) {
+void registerDeviceWithSystem(String userEmail, String password, String deviceDescription) {
   DynamicJsonBuffer jsonBuffer;
   JsonObject& root = jsonBuffer.createObject();
   root["action"] = "registerNewDevice";
-  root["userName"] = userName;
+  root["userEmail"] = userEmail;
+  root["deviceType"] = "Lamp";
   root["password"] = password;
   root["deviceDescription"] = deviceDescription;
 
@@ -56,7 +57,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
         //checks if ID of device was already set,
         //otherwise it will start registration process with websocket server
         if (strlen(device_id_private) == 0) {
-          registerDeviceWithSystem(String(user_name_private), String(user_password_private), String(device_description_private));
+          registerDeviceWithSystem(String(user_email_private), String(user_password_private), String(device_description_private));
         } else {
           //todo complete this part of the system
           registerDeviceStatusWithSystem();
@@ -100,6 +101,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           String deviceID = root[String("deviceID")];
           strcat(device_id_private, deviceID.c_str());
           writeDeviceID(device_id_private);
+          ESP.restart();
         }
         break;
       }
