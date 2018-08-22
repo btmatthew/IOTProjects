@@ -12,7 +12,7 @@ char wifi_ssid_private[32];
 char wifi_password_private[32];
 
 char user_name_private[32];
-char user_token_private[32];//todo replace password with token
+char token_private[32];
 
 char device_id_private[32];
 char device_description_private[32];
@@ -25,7 +25,7 @@ void setup() {
   readSsidPass(wifi_password_private);
   readDeviceID(device_id_private);
   readUserName(user_name_private);
-  readUserToken(user_token_private);
+  readUserToken(token_private);
   readDeviceDescription(device_description_private);
   configSetup();
 }
@@ -50,7 +50,7 @@ void configSetup() {
     server.begin(); //Start the server
   } else {
     setupWifiForSTA();
-    webSocketBoolean = true;    
+    webSocketBoolean = true;
     webSocketSetup(device_id_private);
   }
 }
@@ -62,7 +62,7 @@ void configBody() { //Handler for the body path
     return;
   }
   String message = server.arg("plain");
-  
+
   //server.send(200, "text/plain", "Messages received");
   //message += "\n";
   Serial.println(message);
@@ -81,22 +81,23 @@ void configBody() { //Handler for the body path
   strcat(wifi_ssid_private, ssid.c_str());
   strcat(wifi_password_private, pass.c_str());
   strcat(user_name_private, userName.c_str());
-  strcat(user_token_private, token.c_str());
+  strcat(token_private, token.c_str());
   strcat(device_description_private, description.c_str());
 
   //system will try to connect to wifi at the same time as keeping the connection with mobile device
-  
-  boolean ifWifi = setupWifiForRegistration(wifi_ssid_private,wifi_password_private);
 
-  if(ifWifi){
-      //once the wifi details are confirmed the details will be saved in EMPROM memory 
-      writeSSID(wifi_ssid_private);
-      writeSsidPass(wifi_password_private);
-      webSocketBoolean=true;
-      webSocketSetup(device_id_private);
-  }else{
-      server.send(200, "text/plain", "wifiError"); 
-      webSocketBoolean=false; 
+  boolean ifWifi = setupWifiForRegistration(wifi_ssid_private, wifi_password_private);
+
+  if (ifWifi) {
+    //once the wifi details are confirmed the details will be saved in EMPROM memory
+    writeSSID(wifi_ssid_private);
+    writeSsidPass(wifi_password_private);
+    webSocketBoolean = true;
+    webSocketSetup(device_id_private);
+    
+  } else {
+    server.send(200, "text/plain", "wifiError");
+    webSocketBoolean = false;
   }
 }
 
