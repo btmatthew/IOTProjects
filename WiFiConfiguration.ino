@@ -8,9 +8,23 @@ void setupWifiForSTA() {
   }
 }
 
+boolean setupWifiForRegistration(char wifi_ssid_private[32],char wifi_password_private[32]) {
+  WiFi.begin(wifi_ssid_private, wifi_password_private);
+  int count =0; 
+  while (WiFi.status() != WL_CONNECTED) {
+    if(count==15){
+      return false;
+    }
+    delay(500);
+    Serial.println(".");
+    count++;    
+  }
+  return true;
+}
+
 
 void setupWiFiForSoftAP() {
-  WiFi.mode(WIFI_AP);
+  WiFi.mode(WIFI_AP_STA);
 
   // Do a little work to get a unique-ish name. Append the
   // last two bytes of the MAC (HEX'd) to "Thing-":

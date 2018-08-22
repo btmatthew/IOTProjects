@@ -11,8 +11,8 @@ const char WiFiAPPSK[] = "password";
 char wifi_ssid_private[32];
 char wifi_password_private[32];
 
-char user_email_private[32];
-char user_password_private[32];
+char user_name_private[32];
+char user_token_private[32];//todo replace password with token
 
 char device_id_private[32];
 char device_description_private[32];
@@ -24,8 +24,8 @@ void setup() {
   readSSID(wifi_ssid_private);
   readSsidPass(wifi_password_private);
   readDeviceID(device_id_private);
-  readUserName(user_email_private);
-  readUserPassword(user_password_private);
+  readUserName(user_name_private);
+  readUserToken(user_token_private);
   readDeviceDescription(device_description_private);
   configSetup();
 }
@@ -58,50 +58,46 @@ void configSetup() {
 void configBody() { //Handler for the body path
 
   if (server.hasArg("plain") == false) { //Check if body received
-
     server.send(200, "text/plain", "Body not received");
     return;
-
   }
-  Serial.println("pass received");
-  //String message = "Body received:\n";
   String message = server.arg("plain");
+  
+  //server.send(200, "text/plain", "Messages received");
   //message += "\n";
   Serial.println(message);
-  server.send(200, "text/plain", "detailsReceived");
   //Defining JSONBuffer
   DynamicJsonBuffer jsonBuffer;
   //Parsing JSON from POST Request into JSON object
   JsonObject& root = jsonBuffer.parseObject(message);
 
   String ssid = root[String("ssid")];
-
   String pass = root[String("pass")];
-
-  String userEmail = root[String("userEmail")];
-
-  String password = root[String("userPassword")];
-
+  String userName = root[String("userName")];
+  String token = root[String("userToken")];
   String description = root[String("description")];
 
+  //this will take the data received from JSON and store it into char array
   strcat(wifi_ssid_private, ssid.c_str());
   strcat(wifi_password_private, pass.c_str());
-  strcat(user_email_private, userEmail.c_str());
-  strcat(user_password_private, password.c_str());
+  strcat(user_name_private, userName.c_str());
+  strcat(user_token_private, token.c_str());
   strcat(device_description_private, description.c_str());
 
-  writeSSID(wifi_ssid_private);
+  //system will try to connect to wifi at the same time as keeping the connection with mobile device
+  
+  boolean ifWifi = setupWifiForRegistration(wifi_ssid_private,wifi_password_private);
 
-  writeSsidPass(wifi_password_private);
-
-  writeUserName(user_email_private);
-
-  writeUserPassword(user_password_private);
-
-  writeDeviceDescription(device_description_private);
-
-  configSetup();
-
+  if(ifWifi){
+      //once the wifi details are confirmed the details will be saved in EMPROM memory 
+      writeSSID(wifi_ssid_private);
+      writeSsidPass(wifi_password_private);
+      webSocketBoolean=true;
+      webSocketSetup(device_id_private);
+  }else{
+      server.send(200, "text/plain", "wifiError"); 
+      webSocketBoolean=false; 
+  }
 }
 
 void endWifiSetup() {

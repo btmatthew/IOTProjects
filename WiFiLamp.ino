@@ -43,12 +43,7 @@ String turnLampOff() {
 }
 
 String lampStatus() {
-  value = normalization(analogRead(pResistor));
-  String readOut = "{";
-  readOut += "\"sensorValue\":";
-  readOut += value;
-  readOut += "}";
-  return readOut;
+    return ""+normalization(analogRead(pResistor));
 }
 
 int normalization(int value) {

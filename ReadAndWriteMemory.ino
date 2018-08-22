@@ -38,7 +38,7 @@ void readUserName(char* dest) {
   readEEPROM(64, 32, dest);
 }
 
-void readUserPassword(char* dest) {
+void readUserToken(char* dest) {
   readEEPROM(96, 32, dest);
 }
 
@@ -62,7 +62,7 @@ void writeUserName(char* writeString){
   writeEEPROM(64, 32, writeString);
 }
 
-void writeUserPassword(char* writeString){
+void writeUserToken(char* writeString){
   writeEEPROM(96, 32, writeString);
 }
 
