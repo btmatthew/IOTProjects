@@ -1,5 +1,6 @@
 
 const char* ws_host               = "192.168.1.24";
+//const char* ws_host               = "192.168.1.6";
 const int   ws_port               = 8080;
 String ws_baseurl            = "/iot/iot/";
 String deviceID            = "newDevice";
@@ -122,7 +123,12 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           strcat(device_id_private, deviceID.c_str());
           writeDeviceID(device_id_private);
           //This will send a confirmation back to mobile device that registration was completed.
-          server.send(200, "text/plain", "deviceRegistrationCompleted");
+          JsonObject& root = jsonBuffer.createObject();
+          root["action"] = "deviceRegistrationCompleted";
+          String reply;
+          root.printTo(reply);
+          server.send(200, "text/plain", reply);
+          delay(3000); 
           //once the user details are confirm the system will save the data into EPROM memory.
 
           writeUserName(user_name_private);
@@ -132,11 +138,23 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
         } else if (action == "registrationUnsuccessful") {
           //if the registration was unsucessful the device will notify mobile device.
           //the device will wipe the EPROM memory and reboot itself for another try.
-          server.send(200, "text/plain", "registrationUnsuccessful");
+          JsonObject& root = jsonBuffer.createObject();
+          root["action"] = "registrationUnsuccessful";
+          String reply;
+          root.printTo(reply);
+          server.send(200, "text/plain", reply);
+          delay(3000); 
           cleanUpMemory();
           ESP.restart();
         } else if (action == "databaseError") {
-          server.send(200, "text/plain", "databaseError");
+
+          JsonObject& root = jsonBuffer.createObject();
+          root["action"] = "databaseError";
+          String reply;
+          root.printTo(reply);
+          
+          server.send(200, "text/plain", reply);
+          delay(3000); 
           cleanUpMemory();
           ESP.restart();
         }

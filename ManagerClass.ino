@@ -94,10 +94,16 @@ void configBody() { //Handler for the body path
     writeSsidPass(wifi_password_private);
     webSocketBoolean = true;
     webSocketSetup(device_id_private);
-    
+
   } else {
-    server.send(200, "text/plain", "wifiError");
+    JsonObject& root = jsonBuffer.createObject();
+    root["action"] = "wifiError";
+    String reply;
+    root.printTo(reply);
+    server.send(200, "text/plain", reply);
+    delay(3000); 
     webSocketBoolean = false;
+    ESP.restart();
   }
 }
 

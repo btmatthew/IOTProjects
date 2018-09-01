@@ -12,7 +12,7 @@ boolean setupWifiForRegistration(char wifi_ssid_private[32],char wifi_password_p
   WiFi.begin(wifi_ssid_private, wifi_password_private);
   int count =0; 
   while (WiFi.status() != WL_CONNECTED) {
-    if(count==30){
+    if(count==20){
       return false;
     }
     delay(500);

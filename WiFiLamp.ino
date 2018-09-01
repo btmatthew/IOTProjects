@@ -5,7 +5,7 @@ const int pin = 13;
 const int pResistor = 36;
 int value;
 int maxValue;
-
+String lampStat = "off";
 
 void setupLamp()
 {
@@ -14,36 +14,20 @@ void setupLamp()
 
 String turnLampOn() {
   pinMode(pin, OUTPUT);
-  digitalWrite(pin, HIGH);
-  delay(2000);
-  //release
-  pinMode(pin, INPUT);
-
-  value = normalization(analogRead(pResistor));
-  String readOut = "{";
-  readOut += "\"sensorValue\":";
-  readOut += value;
-  readOut += "}";
-  return readOut;
+  digitalWrite(pin, LOW);
+  lampStat = "on";
+  return lampStatus();
 }
 
 String turnLampOff() {
   pinMode(pin, OUTPUT);
   digitalWrite(pin, HIGH);
-  delay(2000);
-  //release
-  pinMode(pin, INPUT);
-
-  value = normalization(analogRead(pResistor));
-  String readOut = "{";
-  readOut += "\"sensorValue\":";
-  readOut += value;
-  readOut += "}";
-  return readOut;
+  lampStat = "off";
+  return lampStatus();
 }
 
-String lampStatus() {
-    return ""+normalization(analogRead(pResistor));
+String lampStatus() {    
+    return lampStat;
 }
 
 int normalization(int value) {
