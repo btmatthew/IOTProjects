@@ -46,32 +46,43 @@ void readDeviceDescription(char* dest) {
   readEEPROM(128, 32, dest);
 }
 
-void readDeviceID(char* dest){
+void readDeviceID(char* dest) {
   readEEPROM(160, 32, dest);
 }
 
-void writeSSID(char* writeString){
+void writeSSID(char* writeString) {
   writeEEPROM(0, 32, writeString);
 }
 
-void writeSsidPass(char* writeString){
+void writeSsidPass(char* writeString) {
   writeEEPROM(32, 32, writeString);
 }
 
-void writeUserName(char* writeString){
+void writeUserName(char* writeString) {
   writeEEPROM(64, 32, writeString);
 }
 
-void writeUserToken(char* writeString){
+void writeUserToken(char* writeString) {
   writeEEPROM(96, 32, writeString);
 }
 
-void writeDeviceDescription(char* writeString){
+void writeDeviceDescription(char* writeString) {
   writeEEPROM(128, 32, writeString);
 }
 
-void writeDeviceID(char* writeString){
+void writeDeviceID(char* writeString) {
   writeEEPROM(160, 32, writeString);
+}
+
+
+void cleanDeviceDescription() {
+  EEPROM.begin(512);
+  yield();
+  for (int i = 128 ; i < 160 ; i++) {
+    EEPROM.write(i, 0);
+  }
+  EEPROM.commit();
+  EEPROM.end();
 }
 
 void cleanUpMemory() {

@@ -5,8 +5,9 @@
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
 
+
 ESP8266WebServer server(80);
-const char WiFiAPPSK[] = "password";
+const char WiFiAPPSK[] = "password1";
 
 char wifi_ssid_private[32];
 char wifi_password_private[32];
@@ -18,6 +19,8 @@ char device_id_private[32];
 char device_description_private[32];
 
 boolean webSocketBoolean = false;
+WebSocketsClient webSocket;
+int count =0;
 
 void setup() {
   Serial.begin(115200);
@@ -32,7 +35,12 @@ void setup() {
 
 void loop() {
   if (webSocketBoolean) {
+    count++;
     webSocketLoop();
+    if(count == 1000000){      
+      webSocket.sendPing();
+      count=0;
+    }
   } else {
     server.handleClient(); //Handling of incoming requests
   }

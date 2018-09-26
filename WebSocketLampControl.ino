@@ -1,11 +1,12 @@
 
-const char* ws_host               = "192.168.1.24";
-//const char* ws_host               = "192.168.1.6";
+const char* ws_host               = "matthewbulat.com";
+//const char* ws_host               = "192.168.0.131";
 const int   ws_port               = 8080;
 String ws_baseurl            = "/iot/iot/";
 String deviceID            = "newDevice";
-WebSocketsClient webSocket;
-#define USE_SERIAL Serial;
+
+
+//#define USE_SERIAL Serial;
 
 void webSocketSetup(char device_id_private[32]) {
   if (strlen(device_id_private) == 0) {
@@ -16,7 +17,9 @@ void webSocketSetup(char device_id_private[32]) {
   String socketUrl = ws_baseurl + deviceID;
   Serial.println(socketUrl);
   // connect to websocket
+  webSocket.setReconnectInterval(1000);
   webSocket.begin(ws_host, ws_port, socketUrl);
+  
   webSocket.onEvent(webSocketEvent);
 
 }
@@ -67,7 +70,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
 
         String action = root[String("action")];
         Serial.println(action);
-        if (action == "lampStatus") {
+        if (action == "lampstatus") {
           String from = root[String("from")];
           String to = root[String("to")];
           String handlerID = root[String("handlerID")];
@@ -85,7 +88,29 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           Serial.println(reply);
           webSocket.sendTXT(reply);
 
-        } else if (action == "lampOn") {
+        }else if(action == "removedevice"){
+          String from = root[String("from")];
+          String to = root[String("to")];
+          String handlerID = root[String("handlerID")];
+
+          JsonObject& root = jsonBuffer.createObject();
+          root["from"] = to;
+          root["to"] = from;
+          root["action"] = "deviceremoved";
+          root["handlerID"] = handlerID;
+          root["userName"] = user_name_private;
+          root["userToken"] = token_private;
+          String reply;
+          root.printTo(reply);
+          Serial.println(reply);
+          webSocket.sendTXT(reply);
+          delay(3000);
+          webSocket.disconnect();
+          delay(3000);
+          cleanUpMemory();
+          delay(3000);
+          ESP.restart();
+          } else if (action == "lampon") {
           String from = root[String("from")];
           String to = root[String("to")];
           String handlerID = root[String("handlerID")];
@@ -102,7 +127,7 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           root.printTo(reply);
           webSocket.sendTXT(reply);
 
-        } else if (action == "lampOff") {
+        } else if (action == "lampoff") {
           String from = root[String("from")];
           String to = root[String("to")];
           String handlerID = root[String("handlerID")];
@@ -115,6 +140,28 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           root["lampStatus"] = turnLampOff();
           root["userName"] = user_name_private;
           root["userToken"] = token_private;
+          String reply;
+          root.printTo(reply);
+          webSocket.sendTXT(reply);
+        }else if (action == "updatedevicedescription") {
+          String from = root[String("from")];
+          String to = root[String("to")];
+          String handlerID = root[String("handlerID")];
+          String newDeviceName = root[String("deviceDescription")];
+          Serial.println(newDeviceName);
+          //reseting array memory
+          memset(device_description_private, 0, sizeof(device_description_private));
+          strcat(device_description_private, newDeviceName.c_str());
+          Serial.println(device_description_private);
+          writeDeviceDescription(device_description_private);          
+          JsonObject& root = jsonBuffer.createObject();
+          root["from"] = to;
+          root["to"] = from;
+          root["action"] = "devicedescriptionupdated";
+          root["handlerID"] = handlerID;
+          root["userName"] = user_name_private;
+          root["userToken"] = token_private;
+          root["deviceDescription"] = device_description_private;
           String reply;
           root.printTo(reply);
           webSocket.sendTXT(reply);
