@@ -1,4 +1,4 @@
-# IOTProject
-ESP8266 code for purpose of IoT
+# IoT Lamp
+This application will allow for a lamp to communicate with web socket server to turn on and off a lamp.
 
-An ESP8266 code used for purpose converting lagacy items into IoT enabled items.
+
