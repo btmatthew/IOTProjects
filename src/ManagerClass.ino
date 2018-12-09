@@ -4,6 +4,7 @@
 #include <ArduinoJson.h>
 #include <WebSocketsClient.h>
 #include <ArduinoJson.h>
+#include <DHTesp.h>
 
 
 ESP8266WebServer server(80);
@@ -20,7 +21,9 @@ char device_description_private[32];
 
 boolean webSocketBoolean = false;
 WebSocketsClient webSocket;
-int count =0;
+int count = 0;
+
+DHTesp dht;
 
 void setup() {
   Serial.begin(115200);
@@ -30,7 +33,7 @@ void setup() {
   readUserName(user_name_private);
   readUserToken(token_private);
   readDeviceDescription(device_description_private);
-  configSetup();
+  configSetup();  
 }
 
 void loop() {
@@ -57,6 +60,7 @@ void configSetup() {
     server.on("/wifiSetUP", configBody); //Associate the handler function to the path
     server.begin(); //Start the server
   } else {
+    dht.setup(17, DHTesp::DHT11);
     setupWifiForSTA();
     webSocketBoolean = true;
     webSocketSetup(device_id_private);
