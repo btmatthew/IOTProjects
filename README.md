@@ -1,4 +1,6 @@
-# IoT Lamp
-This application will allow for a lamp to communicate with web socket server to turn on and off a lamp.
+# IoTProjects
+
+This is a code that I have used to control my TV with ESP8266 and IR Blaster
+
 
 
