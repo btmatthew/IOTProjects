@@ -1,4 +1,6 @@
-# IoT Lamp
-This application will allow for a lamp to communicate with web socket server to turn on and off a lamp.
+# IoT Projects
+
+This is an application that I have used to control my lamp or any other device using ESP8266 and web sockets.
+
 
 
