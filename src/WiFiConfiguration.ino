@@ -1,7 +1,7 @@
 void setupWifiForSTA() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(wifi_ssid_private, wifi_password_private);
-
+  Serial.println("setup Wifi For STA");
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.println(".");
@@ -11,6 +11,7 @@ void setupWifiForSTA() {
 boolean setupWifiForRegistration(char wifi_ssid_private[32],char wifi_password_private[32]) {
   WiFi.begin(wifi_ssid_private, wifi_password_private);
   int count =0; 
+  Serial.println("setup Wifi For Registration");
   while (WiFi.status() != WL_CONNECTED) {
     if(count==20){
       return false;
@@ -33,7 +34,7 @@ void setupWiFiForSoftAP() {
   String macID = String(mac[WL_MAC_ADDR_LENGTH - 2], HEX) +
                  String(mac[WL_MAC_ADDR_LENGTH - 1], HEX);
   macID.toUpperCase();
-  String AP_NameString = "ESPLamp " + macID;
+  String AP_NameString = "ESPSensor " + macID;
 
   char AP_NameChar[AP_NameString.length() + 1];
   memset(AP_NameChar, 0, AP_NameString.length() + 1);
