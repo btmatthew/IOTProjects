@@ -31,7 +31,7 @@ void registerDeviceWithSystem(String userName, String token, String deviceDescri
     JsonObject &root = jsonBuffer.createObject();
     root["action"] = "registerNewDevice";
     root["userName"] = userName;
-    root["deviceType"] = "Lamp";
+    root["deviceType"] = "TempSensor";
     root["userToken"] = token;
     root["deviceDescription"] = deviceDescription;
 
