@@ -18,6 +18,9 @@ char token_private[32];
 char device_id_private[32];
 char device_description_private[32];
 
+char server_address_number[32];
+char server_port_number[32];
+
 boolean webSocketBoolean = false;
 WebSocketsClient webSocket;
 int count =0;
@@ -30,6 +33,8 @@ void setup() {
   readUserName(user_name_private);
   readUserToken(token_private);
   readDeviceDescription(device_description_private);
+  readServerAddress(server_address_number);
+  readServerPort(server_port_number);
   configSetup();
 }
 
@@ -51,6 +56,7 @@ void configSetup() {
   //This if statement checks if the ssid array read from memory contains any characters
   //if not it will start the initial setup config
   //otherwise it will start the normal operation mode
+
   if (strlen(wifi_ssid_private) == 0) {
     webSocketBoolean = false;
     setupWiFiForSoftAP();
@@ -59,7 +65,7 @@ void configSetup() {
   } else {
     setupWifiForSTA();
     webSocketBoolean = true;
-    webSocketSetup(device_id_private);
+    webSocketSetup(device_id_private,server_address_number,server_port_number);
   }
 }
 
@@ -84,6 +90,8 @@ void configBody() { //Handler for the body path
   String userName = root[String("userName")];
   String token = root[String("userToken")];
   String description = root[String("description")];
+  String serverAddress = root[String("serverAddress")];
+  String portNumber = root[String("portNumber")];
 
   //this will take the data received from JSON and store it into char array
   strcat(wifi_ssid_private, ssid.c_str());
@@ -91,6 +99,8 @@ void configBody() { //Handler for the body path
   strcat(user_name_private, userName.c_str());
   strcat(token_private, token.c_str());
   strcat(device_description_private, description.c_str());
+  strcat(server_address_number, serverAddress.c_str());
+  strcat(server_port_number, portNumber.c_str());
 
   //system will try to connect to wifi at the same time as keeping the connection with mobile device
 
@@ -101,8 +111,8 @@ void configBody() { //Handler for the body path
     writeSSID(wifi_ssid_private);
     writeSsidPass(wifi_password_private);
     webSocketBoolean = true;
-    webSocketSetup(device_id_private);
-
+    webSocketSetup(device_id_private,server_address_number,server_port_number);
+    
   } else {
     JsonObject& root = jsonBuffer.createObject();
     root["action"] = "wifiError";

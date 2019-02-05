@@ -1,16 +1,10 @@
 
 
-const int pin = 13;
+const int pin = 0;
 
-const int pResistor = 36;
 int value;
 int maxValue;
 String lampStat = "off";
-
-void setupLamp()
-{
-  pinMode(pResistor, INPUT);
-}
 
 String turnLampOn() {
   pinMode(pin, OUTPUT);

@@ -1,24 +1,20 @@
-
-const char* ws_host               = "matthewbulat.com";
-//const char* ws_host               = "192.168.0.131";
-const int   ws_port               = 8080;
 String ws_baseurl            = "/iot/iot/";
 String deviceID            = "newDevice";
 
 
 //#define USE_SERIAL Serial;
 
-void webSocketSetup(char device_id_private[32]) {
+void webSocketSetup(char device_id_private[32], char server_address_number[32],char server_port_number[32]) {
   if (strlen(device_id_private) == 0) {
     deviceID += micros();
   } else {
     deviceID = device_id_private;
   }
   String socketUrl = ws_baseurl + deviceID;
-  Serial.println(socketUrl);
+
   // connect to websocket
   webSocket.setReconnectInterval(1000);
-  webSocket.begin(ws_host, ws_port, socketUrl);
+  webSocket.begin(server_address_number, atoi(server_port_number), socketUrl);
   
   webSocket.onEvent(webSocketEvent);
 
@@ -181,6 +177,8 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           writeUserName(user_name_private);
           writeUserToken(token_private);
           writeDeviceDescription(device_description_private);
+          writeServerAddress(server_address_number);
+          writeServerPort(server_port_number);
           ESP.restart();
         } else if (action == "registrationUnsuccessful") {
           //if the registration was unsucessful the device will notify mobile device.

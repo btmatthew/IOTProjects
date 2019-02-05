@@ -50,6 +50,14 @@ void readDeviceID(char* dest) {
   readEEPROM(160, 32, dest);
 }
 
+void readServerAddress(char* dest) {
+  readEEPROM(192, 32, dest);
+}
+
+void readServerPort(char* dest) {
+  readEEPROM(224, 32, dest);
+}
+
 void writeSSID(char* writeString) {
   writeEEPROM(0, 32, writeString);
 }
@@ -74,6 +82,13 @@ void writeDeviceID(char* writeString) {
   writeEEPROM(160, 32, writeString);
 }
 
+void writeServerAddress(char* writeString) {
+  writeEEPROM(192, 32, writeString);
+}
+
+void writeServerPort(char* writeString) {
+  writeEEPROM(224, 32, writeString);
+}
 
 void cleanDeviceDescription() {
   EEPROM.begin(512);

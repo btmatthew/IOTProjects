@@ -4,7 +4,7 @@ void setupWifiForSTA() {
 
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
-    Serial.println(".");
+    Serial.println(wifi_ssid_private);
   }
 }
 
@@ -16,7 +16,6 @@ boolean setupWifiForRegistration(char wifi_ssid_private[32],char wifi_password_p
       return false;
     }
     delay(500);
-    Serial.println(".");
     count++;    
   }
   return true;
