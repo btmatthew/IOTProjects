@@ -2,20 +2,25 @@
 
 const int pin = 0;
 
+byte relON[] = {0xA0, 0x01, 0x01, 0xA2};  
+byte relOFF[] = {0xA0, 0x01, 0x00, 0xA1};
+
 int value;
 int maxValue;
 String lampStat = "off";
 
 String turnLampOn() {
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, LOW);
+  //pinMode(pin, OUTPUT);
+  //digitalWrite(pin, LOW);
+  Serial.write(relON, sizeof(relON));   
   lampStat = "on";
   return lampStatus();
 }
 
 String turnLampOff() {
-  pinMode(pin, OUTPUT);
-  digitalWrite(pin, HIGH);
+  //pinMode(pin, OUTPUT);
+  //digitalWrite(pin, HIGH);
+  Serial.write(relOFF, sizeof(relOFF));  
   lampStat = "off";
   return lampStatus();
 }

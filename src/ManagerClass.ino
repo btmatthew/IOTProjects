@@ -26,7 +26,8 @@ WebSocketsClient webSocket;
 int count =0;
 
 void setup() {
-  Serial.begin(115200);
+  //Serial.begin(115200);
+  Serial.begin(9600);
   readSSID(wifi_ssid_private);
   readSsidPass(wifi_password_private);
   readDeviceID(device_id_private);
