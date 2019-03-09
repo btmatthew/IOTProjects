@@ -29,7 +29,7 @@ void registerDeviceWithSystem(String userName, String token, String deviceDescri
   JsonObject& root = jsonBuffer.createObject();
   root["action"] = "registerNewDevice";
   root["userName"] = userName;
-  root["deviceType"] = "Lamp";
+  root["deviceType"] = "3InputRelayLamp";
   root["userToken"] = token;
   root["deviceDescription"] = deviceDescription;
 
@@ -110,13 +110,15 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           String from = root[String("from")];
           String to = root[String("to")];
           String handlerID = root[String("handlerID")];
+          String relayID = root[String("relayID")];
 
           JsonObject& root = jsonBuffer.createObject();
           root["from"] = to;
           root["to"] = from;
           root["action"] = action;
           root["handlerID"] = handlerID;
-          root["lampStatus"] = turnLampOn();
+          root["relayID"] = relayID;
+          root["lampStatus"] = turnLampOn(relayID.toInt());
           root["userName"] = user_name_private;
           root["userToken"] = token_private;
           String reply;
@@ -127,13 +129,15 @@ void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
           String from = root[String("from")];
           String to = root[String("to")];
           String handlerID = root[String("handlerID")];
-
+          String relayID = root[String("relayID")];
+          
           JsonObject& root = jsonBuffer.createObject();
           root["from"] = to;
           root["to"] = from;
           root["action"] = action;
           root["handlerID"] = handlerID;
-          root["lampStatus"] = turnLampOff();
+          root["relayID"] = relayID;
+          root["lampStatus"] = turnLampOff(relayID.toInt());
           root["userName"] = user_name_private;
           root["userToken"] = token_private;
           String reply;

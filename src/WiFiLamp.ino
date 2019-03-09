@@ -1,51 +1,106 @@
 
+String lampStat1 = "off";
+String lampStat2 = "off";
+String lampStat3 = "off";
 
-const int pin = 0;
-
-byte relON[] = {0xA0, 0x01, 0x01, 0xA2};  
-byte relOFF[] = {0xA0, 0x01, 0x00, 0xA1};
-
-int value;
-int maxValue;
-String lampStat = "off";
-
-String turnLampOn() {
-  //pinMode(pin, OUTPUT);
-  //digitalWrite(pin, LOW);
-  Serial.write(relON, sizeof(relON));   
-  lampStat = "on";
-  return lampStatus();
+String turnLampOn(int pin)
+{
+  switch (pin)
+  {
+  case 0:
+  {
+    lampStat1 = "on";
+    lampStat2 = "on";
+    lampStat3 = "on";
+      pinMode(5, OUTPUT);
+      digitalWrite(5, LOW);
+      pinMode(4, OUTPUT);
+      digitalWrite(4, LOW);
+      pinMode(0, OUTPUT);
+      digitalWrite(0, LOW);
+    String allLamps = lampStat1 + "," + lampStat2 + "," + lampStat3;
+    return allLamps;
+    break;
+  }
+  case 1:
+  {
+    pinMode(5, OUTPUT);
+    digitalWrite(5, LOW);
+    lampStat1 = "on";
+    return lampStat1;
+    break;
+  }
+  case 2:
+  {
+    pinMode(4, OUTPUT);
+    digitalWrite(4, LOW);
+    lampStat2 = "on";
+    return lampStat2;
+    break;
+  }
+  case 3:
+  {
+    pinMode(0, OUTPUT);
+    digitalWrite(0, LOW);
+    lampStat3 = "on";
+    return lampStat3;
+    break;
+  }
+  }
+  return lampStat1;
 }
 
-String turnLampOff() {
-  //pinMode(pin, OUTPUT);
-  //digitalWrite(pin, HIGH);
-  Serial.write(relOFF, sizeof(relOFF));  
-  lampStat = "off";
-  return lampStatus();
+String turnLampOff(int pin)
+{
+  switch (pin)
+  {
+  case 0:
+  {
+    lampStat1 = "off";
+    lampStat2 = "off";
+    lampStat3 = "off";
+      pinMode(5, OUTPUT);
+      digitalWrite(5, HIGH);
+      pinMode(4, OUTPUT);
+      digitalWrite(4, HIGH);
+      pinMode(0, OUTPUT);
+      digitalWrite(0, HIGH);
+    String allLamps = lampStat1 + "," + lampStat2 + "," + lampStat3;
+    return allLamps;
+    break;
+  }
+  case 1:
+  {
+      pinMode(5, OUTPUT);
+      digitalWrite(5, HIGH);
+    lampStat1 = "off";
+    return lampStat1;
+    break;
+  }
+  case 2:
+  {
+      pinMode(4, OUTPUT);
+      digitalWrite(4, HIGH);
+    lampStat2 = "off";
+    return lampStat2;
+    break;
+  }
+  case 3:
+  {
+      pinMode(0, OUTPUT);
+      digitalWrite(0, HIGH);
+    lampStat3 = "off";
+    return lampStat3;
+    break;
+  }
+  }
+  return lampStat1;
 }
 
-String lampStatus() {    
-    return lampStat;
+String lampStatus(){
+      String allLamps = lampStat1 + "," + lampStat2 + "," + lampStat3;
+    return allLamps;
 }
 
-int normalization(int value) {
-  if (value > maxValue) {
-    maxValue = value;
-  }
-  if (maxValue <= 1 || value == 0) {
-    return value;
-  }
-  int sign = 100;
 
-  if (value < 0) {
-    value = -value;
-    sign = -100;
-  }
-
-  if (value > maxValue) {
-    value = maxValue;
-  }
-  return log10(value + 1) / log10(maxValue) * sign;
-}
 
